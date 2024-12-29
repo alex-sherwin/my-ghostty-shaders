@@ -1,11 +1,11 @@
-#iChannel0 "file:///Users/asherwin/.config/ghostty/myshaders/screen2.png"
+// #iChannel0 "file:///Users/asherwin/.config/ghostty/myshaders/screen2.png"
 
 //Shader License: CC BY 3.0
 //Author: Jan Mróz (jaszunio15)
 
-#define SMOKE_INTENSITY_MULTIPLIER 0.75
+#define SMOKE_INTENSITY_MULTIPLIER 0.9
 #define PARTICLES_ALPHA_MOD 0.9
-#define SMOKE_ALPHA_MOD 0.6
+#define SMOKE_ALPHA_MOD 0.5
 #define LAYERS_COUNT 15
 
 #define VEC3_1 (vec3(1.0))
@@ -211,12 +211,13 @@ vec3 layeredParticles(in vec2 uv, in float sizeMod, in float alphaMod, in int la
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec2 uv = (2.0 * fragCoord - iResolution.xy) / iResolution.x;
     
-    float vignette = 1.1 - smoothstep(0.4, 1.4, length(uv + vec2(0.0, 0.3)));
+    // float vignette = 1.1 - smoothstep(0.4, 1.4, length(uv + vec2(0.0, 0.3)));
+    float vignette = 1.3 - smoothstep(0.4, 1.4, length(uv + vec2(0.0, 0.3)));
     
     uv *= 2.5;
     
     float smokeIntensity = layeredNoise1_2(uv * 10.0 + iTime * 4.0 * MOVEMENT_DIRECTION * MOVEMENT_SPEED, 1.7, 0.7, 6, 0.2);
-    smokeIntensity *= pow(1.0 - smoothstep(-1.0, 1.6, uv.y), 2.0); 
+    smokeIntensity *= pow(smoothstep(-1.0, 1.6, uv.y), 2.0); 
     vec3 smoke = smokeIntensity * SMOKE_COLOR * vignette * SMOKE_INTENSITY_MULTIPLIER * SMOKE_ALPHA_MOD;
     
     //Cutting holes in smoke
