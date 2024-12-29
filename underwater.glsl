@@ -1,4 +1,4 @@
-#iChannel0 "file:///Users/asherwin/.config/ghostty/myshaders/screen2.png"
+// #iChannel0 "file:///Users/asherwin/.config/ghostty/myshaders/screen2.png"
 
 #define BLACK_BLEND_THRESHOLD .4
 
@@ -22,14 +22,14 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	vec2 coord = vec2(fragCoord.x, iResolution.y - fragCoord.y);
 	
 	// Set the parameters of the sun rays
-	vec2 rayPos1 = vec2(iResolution.x * 0.7, iResolution.y * -0.4);
-	vec2 rayRefDir1 = normalize(vec2(1.0, -0.116));
+	vec2 rayPos1 = vec2(iResolution.x * 0.7, iResolution.y * 1.1);
+	vec2 rayRefDir1 = normalize(vec2(1.0, 0.116));
 	float raySeedA1 = 36.2214;
 	float raySeedB1 = 21.11349;
 	float raySpeed1 = 1.1;
 	
-	vec2 rayPos2 = vec2(iResolution.x * 0.8, iResolution.y * -0.6);
-	vec2 rayRefDir2 = normalize(vec2(1.0, 0.241));
+	vec2 rayPos2 = vec2(iResolution.x * 0.8, iResolution.y * 1.2);
+	vec2 rayRefDir2 = normalize(vec2(1.0, -0.241));
 	const float raySeedA2 = 22.39910;
 	const float raySeedB2 = 18.0234;
 	const float raySpeed2 = 0.9;
