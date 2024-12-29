@@ -6,7 +6,7 @@
 #define SMOKE_INTENSITY_MULTIPLIER 0.9
 #define PARTICLES_ALPHA_MOD 0.9
 #define SMOKE_ALPHA_MOD 0.5
-#define LAYERS_COUNT 15
+#define LAYERS_COUNT 8
 
 #define VEC3_1 (vec3(1.0))
 
@@ -234,9 +234,14 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec4 terminalColor = texture(iChannel0, termUV);
     // Make a mask that is 1.0 where the terminal content is not black
     float mask = 1.0 - step(0.5, dot(terminalColor.rgb, VEC3_1));
-    vec3 blendedColor = mix(terminalColor.rgb, col, mask);
+    // vec3 blendedColor = mix(terminalColor.rgb, col, mask);
+    // vec3 blendedColor = mix(terminalColor.rgb, col, 0.5);
+
+
+    float blackThreshold = 0.4;
+    float alpha = step(length(terminalColor.rgb), blackThreshold);
+    vec3 blendedColor = mix(terminalColor.rgb, col, alpha);
+
     
     fragColor = vec4(blendedColor, terminalColor.a);
 }
-
-#
