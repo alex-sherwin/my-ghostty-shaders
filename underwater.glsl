@@ -1,17 +1,31 @@
 // #iChannel0 "file:///Users/asherwin/.config/ghostty/myshaders/screen2.png"
 
+// adapted by Alex Sherwin for Ghostty from https://www.shadertoy.com/view/lljGDt
+
 #define BLACK_BLEND_THRESHOLD .4
+
+float hash21(vec2 p) {
+    p = fract(p * vec2(233.34, 851.73));
+    p += dot(p, p + 23.45);
+    return fract(p.x * p.y);
+}
 
 float rayStrength(vec2 raySource, vec2 rayRefDirection, vec2 coord, float seedA, float seedB, float speed)
 {
-	vec2 sourceToCoord = coord - raySource;
-	float cosAngle = dot(normalize(sourceToCoord), rayRefDirection);
-	
-	return clamp(
-		(0.45 + 0.15 * sin(cosAngle * seedA + iTime * speed)) +
-		(0.3 + 0.2 * cos(-cosAngle * seedB + iTime * speed)),
-		0.0, 1.0) *
-		clamp((iResolution.x - length(sourceToCoord)) / iResolution.x, 0.5, 1.0);
+    vec2 sourceToCoord = coord - raySource;
+    float cosAngle = dot(normalize(sourceToCoord), rayRefDirection);
+    
+    // Add subtle dithering based on screen coordinates
+    float dither = hash21(coord) * 0.015 - 0.0075;
+    
+    float ray = clamp(
+        (0.45 + 0.15 * sin(cosAngle * seedA + iTime * speed)) +
+        (0.3 + 0.2 * cos(-cosAngle * seedB + iTime * speed)) + dither,
+        0.0, 1.0);
+        
+    // Smoothstep the distance falloff
+    float distFade = smoothstep(0.0, iResolution.x, iResolution.x - length(sourceToCoord));
+    return ray * mix(0.5, 1.0, distFade);
 }
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
@@ -56,7 +70,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
   vec4 terminalColor = texture(iChannel0, termUV);
 
   float alpha = step(length(terminalColor.rgb), BLACK_BLEND_THRESHOLD);
-  vec3 blendedColor = mix(terminalColor.rgb * 1.0, col.rgb * 0.4, alpha);
+  vec3 blendedColor = mix(terminalColor.rgb * 1.0, col.rgb * 0.3, alpha);
   
   fragColor = vec4(blendedColor, terminalColor.a);
 }
